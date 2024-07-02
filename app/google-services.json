@@ -1,0 +1,49 @@
+{
+  "project_info": {
+    "project_number": "221131832138",
+    "firebase_url": "https://mini-test-331ad-default-rtdb.asia-southeast1.firebasedatabase.app",
+    "project_id": "mini-test-331ad",
+    "storage_bucket": "mini-test-331ad.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:221131832138:android:f7a971c9735595d83c1fb3",
+        "android_client_info": {
+          "package_name": "com.example.bb"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCpmfWTB0iC8I9iR6qAQ5Wcoy3NwdoO7ic"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:221131832138:android:0afdc657bedf3adf3c1fb3",
+        "android_client_info": {
+          "package_name": "com.jovitmathew.ecs"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCpmfWTB0iC8I9iR6qAQ5Wcoy3NwdoO7ic"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
