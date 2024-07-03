@@ -5,7 +5,6 @@ import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
 import android.widget.EditText
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
@@ -21,9 +20,18 @@ class SecondActivity : AppCompatActivity() {
 
         auth = Firebase.auth
 
-        val signInButton = findViewById<Button>(R.id.button2) // Assuming button2 is your Sign In button
-        val emailEditText = findViewById<EditText>(R.id.editTextText) // Assuming editTextText is for email
-        val passwordEditText = findViewById<EditText>(R.id.editTextText2) // Assuming editTextText2 is for password
+        // Check if user is already signed in
+        val currentUser = auth.currentUser
+        if (currentUser != null) {
+            // User is alreadysigned in, proceed to ThirdActivity
+            startActivity(Intent(this, ThirdActivity::class.java))
+            finish() // Finish SecondActivity to prevent going back to login
+            return
+        }
+
+        val signInButton = findViewById<Button>(R.id.button2)
+        val emailEditText = findViewById<EditText>(R.id.editTextText)
+        val passwordEditText = findViewById<EditText>(R.id.editTextText2)
 
         signInButton.setOnClickListener {
             val email = emailEditText.text.toString()
@@ -36,9 +44,9 @@ class SecondActivity : AppCompatActivity() {
         auth.signInWithEmailAndPassword(email, password)
             .addOnCompleteListener(this) { task ->
                 if (task.isSuccessful) {
-                    // Sign in success, open ThirdActivity
-                    val intent = Intent(this, ThirdActivity::class.java)
-                    startActivity(intent)
+                    // Sign in success, proceed to ThirdActivity
+                    startActivity(Intent(this, ThirdActivity::class.java))
+                    finish() // Finish SecondActivity
                 } else {
                     // If sign in fails, show a dialog
                     AlertDialog.Builder(this)
