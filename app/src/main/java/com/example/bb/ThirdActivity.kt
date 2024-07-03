@@ -28,14 +28,15 @@ class ThirdActivity : AppCompatActivity() {
         webView.loadUrl(url)
 
         val bottomNavigationView = findViewById<BottomNavigationView>(R.id.bottomNavigationView)
+        bottomNavigationView.selectedItemId = R.id.nav_button2
         bottomNavigationView.setOnNavigationItemSelectedListener { item ->
             when (item.itemId) {
                 R.id.nav_button2 -> {
-                    startActivity(Intent(this, FourthActivity::class.java))
+                    startActivity(Intent(this, ThirdActivity::class.java))
                     true
                 }
                 R.id.nav_button1 -> {
-                    startActivity(Intent(this, ThirdActivity::class.java))
+                    startActivity(Intent(this, FourthActivity::class.java))
                     true
                 }
                 R.id.nav_button3 -> {
