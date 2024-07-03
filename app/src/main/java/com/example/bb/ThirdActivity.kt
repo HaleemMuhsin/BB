@@ -1,10 +1,12 @@
 // ThirdActivity.kt
 package com.example.bb
 
+import android.content.Intent
 import android.os.Bundle
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import androidx.appcompat.app.AppCompatActivity
+import com.google.android.material.bottomnavigation.BottomNavigationView
 
 class ThirdActivity : AppCompatActivity() {
 
@@ -24,5 +26,28 @@ class ThirdActivity : AppCompatActivity() {
         // Load a URL into the WebView
         val url = "https://billboardsjcetapp.netlify.app" // Replace with your desired URL
         webView.loadUrl(url)
+
+        val bottomNavigationView = findViewById<BottomNavigationView>(R.id.bottomNavigationView)
+        bottomNavigationView.setOnNavigationItemSelectedListener { item ->
+            when (item.itemId) {
+                R.id.nav_button2 -> {
+                    startActivity(Intent(this, ThirdActivity::class.java))
+                    true
+                }
+                R.id.nav_button1 -> {
+                    startActivity(Intent(this, MainActivity::class.java))
+                    true
+                }
+                R.id.nav_button3 -> {
+                    startActivity(Intent(this, SecondActivity::class.java))
+                    true
+                }
+                else -> false
+            }
+
+
+        }
+
+
     }
 }
