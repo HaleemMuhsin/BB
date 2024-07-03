@@ -30,7 +30,7 @@
         android:id="@+id/textView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="35dp"
+        android:layout_marginTop="120dp"
         android:gravity="center"
         android:text="Hello"
         android:textSize="25sp"
@@ -43,7 +43,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
         android:gravity="center"
-        android:text="Welcome to Maniac's work"
+        android:text="Welcome to BillBoard"
         android:textSize="20sp"
         android:textColor="#C9C9C9"
         app:layout_constraintTop_toBottomOf="@id/textView" />
@@ -84,21 +84,24 @@
         android:layout_marginStart="40dp"
         android:layout_marginEnd="40dp"
         android:layout_marginTop="20dp"
-        app:layout_constraintHeight="40dp"/>
+        app:layout_constraintHeight="40dp" />
 
     <Button
         android:id="@+id/button2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginStart="40dp"
         android:layout_marginTop="50dp"
+        android:layout_marginEnd="40dp"
         android:background="@drawable/buttonstyle"
         android:text="Sign In"
         android:textColor="#010101"
         android:textColorLink="#FFFFFF"
         android:textSize="18dp"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHeight="60dp"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/editTextText2"
-        android:layout_marginStart="40dp"
-        android:layout_marginEnd="40dp"
+
         />
 </androidx.constraintlayout.widget.ConstraintLayout>
