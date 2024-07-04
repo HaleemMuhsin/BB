@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
 import android.widget.EditText
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -76,7 +77,7 @@ class FourthActivity : AppCompatActivity() {
                         result.append(document.data.getValue("name")).append("\n")
                             .append(document.data.getValue("specializedIn")).append("\n\n")
                     }
-                    val textViewResult: EditText = findViewById(R.id.textViewResult)
+                    val textViewResult: TextView = findViewById(R.id.textViewResult)
                     textViewResult.setText(result)
                 }
             }
