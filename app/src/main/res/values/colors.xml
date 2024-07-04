@@ -2,4 +2,6 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="selected_nav_color">#FF4081</color> <!-- Example: Pink color -->
+    <color name="default_nav_color">#3B3B3B</color> <!-- Example: Greyish color -->
 </resources>
