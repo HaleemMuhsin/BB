@@ -1,8 +1,9 @@
 package com.example.bb
 
-import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
+import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
@@ -10,53 +11,39 @@ import android.widget.ImageButton
 import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
-import com.google.android.material.bottomnavigation.BottomNavigationView
+import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.fragment.app.Fragment
 import com.google.firebase.firestore.FirebaseFirestore
 
-class FourthActivity : AppCompatActivity() {
+class FourthFragment : Fragment() {
 
     private lateinit var firestore: FirebaseFirestore
-    private lateinit var container: LinearLayout
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_fourth)
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        // Inflate the layout for this fragment
+        return inflater.inflate(R.layout.fragment_fourth, container, false)
+    }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         firestore = FirebaseFirestore.getInstance()
-        container = findViewById(R.id.container)
 
-        val saveButton: Button = findViewById(R.id.saveButton)
-        val inputFirstName: EditText = findViewById(R.id.inputFirstName)
-        val inputLastName: EditText = findViewById(R.id.inputLastName)
+        val saveButton: Button = view.findViewById(R.id.saveButton)
+        val inputFirstName: EditText = view.findViewById(R.id.inputFirstName)
+        val inputLastName: EditText = view.findViewById(R.id.inputLastName)
 
         saveButton.setOnClickListener {
             val firstName = inputFirstName.text.toString()
             val lastName = inputLastName.text.toString()
             saveFireStore(firstName, lastName)
+            inputFirstName.text.clear()
+            inputLastName.text.clear()
         }
 
         readFireStoreData()
-
-        val bottomNavigationView = findViewById<BottomNavigationView>(R.id.bottomNavigationView)
-        bottomNavigationView.selectedItemId = R.id.nav_button1
-        bottomNavigationView.setOnNavigationItemSelectedListener { item ->
-            when (item.itemId) {
-                R.id.nav_button2 -> {
-                    startActivity(Intent(this, ThirdActivity::class.java))
-                    true
-                }
-                R.id.nav_button1 -> {
-                    startActivity(Intent(this, FourthActivity::class.java))
-                    true
-                }
-                R.id.nav_button3 -> {
-                    startActivity(Intent(this, SecondActivity::class.java))
-                    true
-                }
-                else -> false
-            }
-        }
     }
 
     private fun saveFireStore(firstname: String, lastname: String) {
@@ -68,16 +55,17 @@ class FourthActivity : AppCompatActivity() {
         db.collection("fields")
             .add(user)
             .addOnSuccessListener {
-                Toast.makeText(this@FourthActivity, "Record added successfully", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, "Record added successfully", Toast.LENGTH_SHORT).show()
                 readFireStoreData()
             }
             .addOnFailureListener {
-                Toast.makeText(this@FourthActivity, "Record failed to add", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, "Record failed to add", Toast.LENGTH_SHORT).show()
             }
     }
 
     private fun readFireStoreData() {
         val db = FirebaseFirestore.getInstance()
+        val container: ViewGroup = view?.findViewById(R.id.container) ?: return
         container.removeAllViews() // Clear previous views
         db.collection("fields")
             .get()
@@ -91,7 +79,8 @@ class FourthActivity : AppCompatActivity() {
     }
 
     private fun addDocumentToLayout(docId: String, name: String, specializedIn: String) {
-        val linearLayout = LinearLayout(this).apply {
+        val container: ViewGroup = view?.findViewById(R.id.container) ?: return
+        val linearLayout = LinearLayout(context).apply {
             orientation = LinearLayout.HORIZONTAL
             layoutParams = ViewGroup.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT,
@@ -103,7 +92,7 @@ class FourthActivity : AppCompatActivity() {
             }
         }
 
-        val textView = TextView(this).apply {
+        val textView = TextView(context).apply {
             layoutParams = LinearLayout.LayoutParams(
                 0,
                 ViewGroup.LayoutParams.WRAP_CONTENT,
@@ -114,7 +103,7 @@ class FourthActivity : AppCompatActivity() {
             textSize = 16f
         }
 
-        val imageButton = ImageButton(this).apply {
+        val imageButton = ImageButton(context).apply {
             layoutParams = LinearLayout.LayoutParams(
                 ViewGroup.LayoutParams.WRAP_CONTENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT
@@ -141,11 +130,11 @@ class FourthActivity : AppCompatActivity() {
         db.collection("fields").document(docId)
             .delete()
             .addOnSuccessListener {
-                Toast.makeText(this@FourthActivity, "Document deleted successfully", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, "Document deleted successfully", Toast.LENGTH_SHORT).show()
                 readFireStoreData() // Refresh the data
             }
             .addOnFailureListener { e ->
-                Toast.makeText(this@FourthActivity, "Error deleting document: ${e.message}", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, "Error deleting document: ${e.message}", Toast.LENGTH_SHORT).show()
             }
     }
 }

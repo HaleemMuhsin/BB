@@ -2,10 +2,9 @@ package com.example.bb
 
 import android.content.Intent
 import android.os.Bundle
-import android.webkit.WebView
-import android.webkit.WebViewClient
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
@@ -21,31 +20,22 @@ class ThirdActivity : AppCompatActivity() {
 
         auth = Firebase.auth
 
-        setupWebView()
+        loadFragment(ThirdFragment()) // Load the initial fragment
 
         setupBottomNavigationBar()
     }
 
-    private fun setupWebView() {
-        val webView = findViewById<WebView>(R.id.webview)
-        webView.webViewClient = WebViewClient()
-        webView.settings.javaScriptEnabled = true
-        val url = "https://billboardsjcetapp.netlify.app"
-        webView.loadUrl(url)
-    }
-
     private fun setupBottomNavigationBar() {
         val bottomNavigationView = findViewById<BottomNavigationView>(R.id.bottomNavigationView)
-        bottomNavigationView.selectedItemId = R.id.nav_button2
+        bottomNavigationView.selectedItemId = R.id.nav_button2 // Set initial selected item
         bottomNavigationView.setOnNavigationItemSelectedListener { item ->
             when (item.itemId) {
                 R.id.nav_button2 -> {
-                    // Refresh current activity (optional)
-                    startActivity(Intent(this, ThirdActivity::class.java))
+                    loadFragment(ThirdFragment())
                     true
                 }
                 R.id.nav_button1 -> {
-                    startActivity(Intent(this, FourthActivity::class.java))
+                    loadFragment(FourthFragment())
                     true
                 }
                 R.id.nav_button3 -> {
@@ -62,11 +52,17 @@ class ThirdActivity : AppCompatActivity() {
             .setTitle("Logout")
             .setMessage("Are you sure you want to logout?")
             .setPositiveButton("Yes") { _, _ ->
-                auth.signOut()
+                auth.signOut() // Sign out the user from Firebase if necessary
                 startActivity(Intent(this, SecondActivity::class.java))
                 finish()
             }
             .setNegativeButton("No", null)
             .show()
+    }
+
+    private fun loadFragment(fragment: Fragment) {
+        supportFragmentManager.beginTransaction()
+            .replace(R.id.fragment_container, fragment)
+            .commit()
     }
 }

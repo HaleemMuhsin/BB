@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/third_activity"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#B8B8B8"
-    android:orientation="vertical">
+    android:background="#B8B8B8">
 
-    <WebView
-        android:id="@+id/webview"
+    <FrameLayout
+        android:id="@+id/fragment_container"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginBottom="20dp"
@@ -28,10 +28,8 @@
         app:itemTextColor="@color/bottom_nav_item_color_selector"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHeight="50dp"
         app:layout_constraintStart_toStartOf="parent"
         app:menu="@menu/bottom_nav_menu"
-        app:itemIconSize="24dp"/>
-
+        app:itemIconSize="24dp" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
