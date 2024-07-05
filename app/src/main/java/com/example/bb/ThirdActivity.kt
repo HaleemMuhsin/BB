@@ -13,7 +13,6 @@ import com.google.firebase.ktx.Firebase
 
 class ThirdActivity : AppCompatActivity() {
 
-    private lateinit var webView: WebView
     private lateinit var auth: FirebaseAuth
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -22,17 +21,26 @@ class ThirdActivity : AppCompatActivity() {
 
         auth = Firebase.auth
 
-        webView = findViewById(R.id.webview)
+        setupWebView()
+
+        setupBottomNavigationBar()
+    }
+
+    private fun setupWebView() {
+        val webView = findViewById<WebView>(R.id.webview)
         webView.webViewClient = WebViewClient()
         webView.settings.javaScriptEnabled = true
         val url = "https://billboardsjcetapp.netlify.app"
         webView.loadUrl(url)
+    }
 
+    private fun setupBottomNavigationBar() {
         val bottomNavigationView = findViewById<BottomNavigationView>(R.id.bottomNavigationView)
         bottomNavigationView.selectedItemId = R.id.nav_button2
         bottomNavigationView.setOnNavigationItemSelectedListener { item ->
             when (item.itemId) {
                 R.id.nav_button2 -> {
+                    // Refresh current activity (optional)
                     startActivity(Intent(this, ThirdActivity::class.java))
                     true
                 }
@@ -53,12 +61,12 @@ class ThirdActivity : AppCompatActivity() {
         AlertDialog.Builder(this)
             .setTitle("Logout")
             .setMessage("Are you sure you want to logout?")
-            .setPositiveButton("Yes") { _, _ ->// User confirmed logout, sign out and go to SecondActivity
+            .setPositiveButton("Yes") { _, _ ->
                 auth.signOut()
                 startActivity(Intent(this, SecondActivity::class.java))
-                finish() // Finish ThirdActivity
+                finish()
             }
-            .setNegativeButton("No", null) // Do nothing if user cancels
+            .setNegativeButton("No", null)
             .show()
     }
 }

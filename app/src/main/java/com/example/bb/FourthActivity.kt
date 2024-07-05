@@ -3,7 +3,6 @@ package com.example.bb
 import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
-import android.util.Log
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
@@ -25,7 +24,7 @@ class FourthActivity : AppCompatActivity() {
         setContentView(R.layout.activity_fourth)
 
         firestore = FirebaseFirestore.getInstance()
-        container = findViewById(R.id. container)
+        container = findViewById(R.id.container)
 
         val saveButton: Button = findViewById(R.id.saveButton)
         val inputFirstName: EditText = findViewById(R.id.inputFirstName)
@@ -70,6 +69,7 @@ class FourthActivity : AppCompatActivity() {
             .add(user)
             .addOnSuccessListener {
                 Toast.makeText(this@FourthActivity, "Record added successfully", Toast.LENGTH_SHORT).show()
+                readFireStoreData()
             }
             .addOnFailureListener {
                 Toast.makeText(this@FourthActivity, "Record failed to add", Toast.LENGTH_SHORT).show()
@@ -78,6 +78,7 @@ class FourthActivity : AppCompatActivity() {
 
     private fun readFireStoreData() {
         val db = FirebaseFirestore.getInstance()
+        container.removeAllViews() // Clear previous views
         db.collection("fields")
             .get()
             .addOnCompleteListener { task ->
@@ -85,8 +86,6 @@ class FourthActivity : AppCompatActivity() {
                     for (document in task.result!!) {
                         addDocumentToLayout(document.id, document.getString("name") ?: "", document.getString("specializedIn") ?: "")
                     }
-                } else {
-                    Log.w("FourthActivity", "Error getting documents.", task.exception)
                 }
             }
     }
@@ -99,8 +98,7 @@ class FourthActivity : AppCompatActivity() {
                 ViewGroup.LayoutParams.WRAP_CONTENT
             ).apply {
                 if (this is ViewGroup.MarginLayoutParams) {
-                    setMargins(0, 0, 0,
-                        0) // Add top and bottom margins
+                    setMargins(0, 8, 0, 8) // Add top and bottom margins
                 }
             }
         }
@@ -121,10 +119,10 @@ class FourthActivity : AppCompatActivity() {
                 ViewGroup.LayoutParams.WRAP_CONTENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT
             ).apply {
-                setMargins(8, 0, 0, 0)// Add left margin to separate button from text
-            setBackgroundColor(Color.TRANSPARENT)
-            setColorFilter(Color.parseColor("#f44343"))
+                setMargins(8, 0, 0, 0) // Add left margin to separate button from text
             }
+            setBackgroundColor(Color.TRANSPARENT)
+            setColorFilter(Color.parseColor("#FF6347")) // Example color
             setImageResource(R.drawable.trash) // Set your desired image resource here
             id = docId.hashCode() // Convert docId to a unique int
             setOnClickListener {
@@ -144,8 +142,7 @@ class FourthActivity : AppCompatActivity() {
             .delete()
             .addOnSuccessListener {
                 Toast.makeText(this@FourthActivity, "Document deleted successfully", Toast.LENGTH_SHORT).show()
-                readFireStoreData()
-                startActivity(Intent(this, FourthActivity::class.java))// Refresh the data
+                readFireStoreData() // Refresh the data
             }
             .addOnFailureListener { e ->
                 Toast.makeText(this@FourthActivity, "Error deleting document: ${e.message}", Toast.LENGTH_SHORT).show()
