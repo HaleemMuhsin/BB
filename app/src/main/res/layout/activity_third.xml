@@ -14,22 +14,43 @@
         app:layout_constraintBottom_toTopOf="@id/bottomNavigationView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent" >
+
+    </FrameLayout>
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottomNavigationView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="40dp"
-        android:layout_marginEnd="40dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="80dp"
         android:layout_marginBottom="20dp"
         android:background="@drawable/buttonstyle"
         app:itemIconTint="@color/bottom_nav_item_color_selector"
         app:itemTextColor="@color/bottom_nav_item_color_selector"
+        app:labelVisibilityMode="unlabeled"
+        app:itemIconSize="24dp"
+        app:itemPadding="16dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:menu="@menu/bottom_nav_menu"
-        app:itemIconSize="24dp" />
+        app:menu="@menu/bottom_nav_menu" />
+    <!-- activity_main.xml -->
+    <ImageButton
+        android:id="@+id/floatingImageButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/theme_selector"
+        android:background="#00FFFFFF"
+        android:padding="12dp"
+        android:layout_marginBottom="5dp"
+        android:contentDescription="Floating Image Button"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        />
+
+
+
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

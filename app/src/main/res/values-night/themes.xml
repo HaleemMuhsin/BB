@@ -3,6 +3,7 @@
     <style name="Base.Theme.BB" parent="Theme.AppCompat.DayNight.NoActionBar">
         <!-- Customize your dark theme here. -->
         <!-- <item name="colorPrimary">@color/my_dark_primary</item> -->
-        <item name="android:fontFamily">@font/inter_regular</item>
+        <item name="android:fontFamily">@font/calsan</item>
+
     </style>
 </resources>
