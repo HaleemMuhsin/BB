@@ -44,18 +44,18 @@ class ThirdActivity : AppCompatActivity() {
 
     private fun setupBottomNavigationBar() {
         val bottomNavigationView = findViewById<BottomNavigationView>(R.id.bottomNavigationView)
-        bottomNavigationView.selectedItemId = R.id.nav_button2 // Set initial selected item
+        bottomNavigationView.selectedItemId = R.id.navigation_home // Set initial selected item
         bottomNavigationView.setOnNavigationItemSelectedListener { item ->
             when (item.itemId) {
-                R.id.nav_button2 -> {
+                R.id.navigation_home -> {
                     loadFragment(ThirdFragment())
                     true
                 }
-                R.id.nav_button1 -> {
+                R.id.navigation_dashboard -> {
                     loadFragment(FifthFragment())
                     true
                 }
-                R.id.nav_button3 -> {
+                R.id.navigation_logout -> {
                     showLogoutConfirmationDialog()
                     true
                 }
@@ -77,7 +77,7 @@ class ThirdActivity : AppCompatActivity() {
                 dialog.dismiss() // Dismiss the dialog
                 // Ensure the navigation selection stays on the current fragment
                 val bottomNavigationView = findViewById<BottomNavigationView>(R.id.bottomNavigationView)
-                bottomNavigationView.selectedItemId = R.id.nav_button2 // Set this to the ID of your current fragment
+                bottomNavigationView.selectedItemId = R.id.navigation_home // Set this to the ID of your current fragment
             }
             .show()
     }

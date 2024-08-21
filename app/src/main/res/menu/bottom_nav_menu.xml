@@ -1,4 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-  
+    <item
+        android:id="@+id/navigation_dashboard"
+        android:icon="@drawable/edit"
+        android:title="" />
+    <item
+        android:id="@+id/navigation_home"
+        android:icon="@drawable/tv_minimal"
+        android:title="" />
+    <item
+        android:id="@+id/navigation_logout"
+        android:icon="@drawable/logout"
+        android:title="" />
 </menu>
