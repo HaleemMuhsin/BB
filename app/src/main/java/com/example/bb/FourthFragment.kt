@@ -1,17 +1,13 @@
 package com.example.bb
 
+import android.app.AlertDialog
 import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.EditText
-import android.widget.ImageButton
-import android.widget.LinearLayout
-import android.widget.TextView
-import android.widget.Toast
-import androidx.constraintlayout.widget.ConstraintLayout
+import android.widget.*
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.google.firebase.firestore.FirebaseFirestore
 
@@ -23,7 +19,6 @@ class FourthFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_fourth, container, false)
     }
 
@@ -46,11 +41,11 @@ class FourthFragment : Fragment() {
         readFireStoreData()
     }
 
-    private fun saveFireStore(firstname: String, lastname: String) {
+    private fun saveFireStore(name: String, specializedIn: String) {
         val db = FirebaseFirestore.getInstance()
         val user: MutableMap<String, Any> = HashMap()
-        user["name"] = firstname
-        user["specializedIn"] = lastname
+        user["name"] = name
+        user["specializedIn"] = specializedIn
 
         db.collection("fields")
             .add(user)
@@ -65,7 +60,7 @@ class FourthFragment : Fragment() {
 
     private fun readFireStoreData() {
         val db = FirebaseFirestore.getInstance()
-        val container: ViewGroup = view?.findViewById(R.id.container) ?: return
+        val container: LinearLayout = view?.findViewById(R.id.container) ?: return
         container.removeAllViews() // Clear previous views
         db.collection("fields")
             .get()
@@ -79,50 +74,61 @@ class FourthFragment : Fragment() {
     }
 
     private fun addDocumentToLayout(docId: String, name: String, specializedIn: String) {
-        val container: ViewGroup = view?.findViewById(R.id.container) ?: return
-        val linearLayout = LinearLayout(context).apply {
+        val container: LinearLayout = view?.findViewById(R.id.container) ?: return
+        val itemLayout = LinearLayout(context).apply {
             orientation = LinearLayout.HORIZONTAL
-            layoutParams = ViewGroup.LayoutParams(
-                ViewGroup.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT
+            layoutParams = LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
             ).apply {
-                if (this is ViewGroup.MarginLayoutParams) {
-                    setMargins(0, 8, 0, 8) // Add top and bottom margins
-                }
+                setMargins(0, 0, 0, 16) // Add bottom margin
             }
         }
 
         val textView = TextView(context).apply {
             layoutParams = LinearLayout.LayoutParams(
                 0,
-                ViewGroup.LayoutParams.WRAP_CONTENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT,
                 1f
             )
             text = "$name \n$specializedIn"
-            setTextColor(resources.getColor(R.color.white))
+            setTextColor(Color.WHITE)
             textSize = 16f
         }
 
-        val imageButton = ImageButton(context).apply {
+        val editButton = ImageButton(context).apply {
             layoutParams = LinearLayout.LayoutParams(
-                ViewGroup.LayoutParams.WRAP_CONTENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
             ).apply {
-                setMargins(8, 0, 0, 0) // Add left margin to separate button from text
+                setMargins(0, 0, 50, 0) // Add right margin to separate from delete button
             }
-            setBackgroundColor(Color.TRANSPARENT)
-            setColorFilter(Color.parseColor("#FF6347")) // Example color
-            setImageResource(R.drawable.trash) // Set your desired image resource here
-            id = docId.hashCode() // Convert docId to a unique int
+            setBackgroundResource(android.R.color.transparent)
+            setImageResource(R.drawable.pencil)
+            setColorFilter(Color.WHITE)
+            setOnClickListener {
+                editFirestoreDocument(docId, name, specializedIn)
+            }
+        }
+
+        val deleteButton = ImageButton(context).apply {
+            layoutParams = LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+            )
+            setBackgroundResource(android.R.color.transparent)
+            setImageResource(R.drawable.trash)
+            setColorFilter(Color.parseColor("#FF6347"))
             setOnClickListener {
                 deleteFirestoreDocument(docId)
             }
         }
 
-        linearLayout.addView(textView)
-        linearLayout.addView(imageButton)
+        itemLayout.addView(textView)
+        itemLayout.addView(editButton)
+        itemLayout.addView(deleteButton)
 
-        container.addView(linearLayout)
+        container.addView(itemLayout)
     }
 
     private fun deleteFirestoreDocument(docId: String) {
@@ -131,10 +137,79 @@ class FourthFragment : Fragment() {
             .delete()
             .addOnSuccessListener {
                 Toast.makeText(context, "Document deleted successfully", Toast.LENGTH_SHORT).show()
-                readFireStoreData() // Refresh the data
+                readFireStoreData()
             }
             .addOnFailureListener { e ->
                 Toast.makeText(context, "Error deleting document: ${e.message}", Toast.LENGTH_SHORT).show()
+            }
+    }
+
+    //Editing Firebase documents
+    private fun editFirestoreDocument(docId: String, currentName: String, currentSpecializedIn: String) {
+        val builder = AlertDialog.Builder(requireContext(), R.style.AlertDialogTheme)
+        val layout = LinearLayout(context).apply {
+            orientation = LinearLayout.VERTICAL
+            setPadding(50, 30, 50, 30)
+        }
+
+        val editName = EditText(context).apply {
+            setText(currentName)
+            setTextColor(Color.WHITE)
+            setHintTextColor(Color.LTGRAY)
+            hint = "Name"
+            background = ContextCompat.getDrawable(context, R.drawable.gridbuttonstyle)
+            setPadding(30, 30, 30, 30)
+        }
+
+        val editSpecializedIn = EditText(context).apply {
+            setText(currentSpecializedIn)
+            setTextColor(Color.WHITE)
+            setHintTextColor(Color.LTGRAY)
+            hint = "Specialized In"
+            background = ContextCompat.getDrawable(context, R.drawable.gridbuttonstyle)
+            setPadding(30, 30, 30, 30)
+        }
+
+        layout.addView(editName, LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT).apply {
+            setMargins(0, 0, 0, 20)
+        })
+        layout.addView(editSpecializedIn, LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT))
+
+        builder.setView(layout)
+            .setTitle("Edit Document")
+            .setPositiveButton("Save") { _, _ ->
+                val newName = editName.text.toString()
+                val newSpecializedIn = editSpecializedIn.text.toString()
+                updateFirestoreDocument(docId, newName, newSpecializedIn)
+            }
+            .setNegativeButton("Cancel") { dialog, _ ->
+                dialog.cancel()
+            }
+
+        val dialog = builder.create()
+        dialog.show()
+
+        // Customize button colors
+        dialog.getButton(AlertDialog.BUTTON_POSITIVE)?.setTextColor(Color.WHITE)
+        dialog.getButton(AlertDialog.BUTTON_NEGATIVE)?.setTextColor(Color.WHITE)
+    }
+
+    private fun updateFirestoreDocument(docId: String, newName: String, newSpecializedIn: String) {
+        val db = FirebaseFirestore.getInstance()
+        val docRef = db.collection("fields").document(docId)
+
+        val updates = hashMapOf<String, Any>(
+            "name" to newName,
+            "specializedIn" to newSpecializedIn
+        )
+
+        docRef.update(updates)
+            .addOnSuccessListener {
+                Toast.makeText(context, "Document updated successfully", Toast.LENGTH_SHORT).show()
+                readFireStoreData()
+            }
+            .addOnFailureListener { e ->
+                Toast.makeText(context, "Error updating document: ${e.message}", Toast.LENGTH_SHORT).show()
             }
     }
 }

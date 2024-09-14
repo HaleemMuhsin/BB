@@ -1,16 +1,13 @@
 package com.example.bb
 
+import android.app.AlertDialog
 import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.EditText
-import android.widget.ImageButton
-import android.widget.LinearLayout
-import android.widget.TextView
-import android.widget.Toast
+import android.widget.*
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.google.firebase.firestore.FirebaseFirestore
 
@@ -112,7 +109,22 @@ class SixthFragment : Fragment() {
             textSize = 16f
         }
 
-        val imageButton = ImageButton(context).apply {
+        val editButton = ImageButton(context).apply {
+            layoutParams = LinearLayout.LayoutParams(
+                ViewGroup.LayoutParams.WRAP_CONTENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT
+            ).apply {
+                setMargins(8, 0, 50, 0) // Add left margin to separate button from text
+            }
+            setBackgroundColor(Color.TRANSPARENT)
+            setColorFilter(Color.WHITE)
+            setImageResource(R.drawable.pencil) // Set your edit icon here
+            setOnClickListener {
+                editFirestoreDocument(docId, count, position)
+            }
+        }
+
+        val deleteButton = ImageButton(context).apply {
             layoutParams = LinearLayout.LayoutParams(
                 ViewGroup.LayoutParams.WRAP_CONTENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT
@@ -120,16 +132,16 @@ class SixthFragment : Fragment() {
                 setMargins(8, 0, 0, 0) // Add left margin to separate button from text
             }
             setBackgroundColor(Color.TRANSPARENT)
-            setColorFilter(Color.parseColor("#FF6347")) // Example color
-            setImageResource(R.drawable.trash) // Set your desired image resource here
-            id = docId.hashCode() // Convert docId to a unique int
+            setColorFilter(Color.parseColor("#FF6347"))
+            setImageResource(R.drawable.trash) // Set your delete icon here
             setOnClickListener {
                 deleteFirestoreDocument(docId)
             }
         }
 
         linearLayout.addView(textView)
-        linearLayout.addView(imageButton)
+        linearLayout.addView(editButton)
+        linearLayout.addView(deleteButton)
 
         container.addView(linearLayout)
     }
@@ -144,6 +156,73 @@ class SixthFragment : Fragment() {
             }
             .addOnFailureListener { e ->
                 Toast.makeText(context, "Error deleting document: ${e.message}", Toast.LENGTH_SHORT).show()
+            }
+    }
+
+    // Edit Firestore document
+    private fun editFirestoreDocument(docId: String, currentCount: String, currentPosition: String) {
+        val builder = AlertDialog.Builder(requireContext(), R.style.AlertDialogTheme)
+        val layout = LinearLayout(context).apply {
+            orientation = LinearLayout.VERTICAL
+            setPadding(50, 30, 50, 30)
+        }
+
+        val editCount = EditText(context).apply {
+            setText(currentCount)
+            setTextColor(Color.WHITE)
+            setHintTextColor(Color.LTGRAY)
+            hint = "Count"
+            background = ContextCompat.getDrawable(context, R.drawable.gridbuttonstyle)
+            setPadding(30, 30, 30, 30)
+        }
+
+        val editPosition = EditText(context).apply {
+            setText(currentPosition)
+            setTextColor(Color.WHITE)
+            setHintTextColor(Color.LTGRAY)
+            hint = "Position"
+            background = ContextCompat.getDrawable(context, R.drawable.gridbuttonstyle)
+            setPadding(30, 30, 30, 30)
+        }
+
+        layout.addView(editCount, LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT).apply {
+            setMargins(0, 0, 0, 20)
+        })
+        layout.addView(editPosition, LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT))
+
+        builder.setView(layout)
+            .setTitle("Edit Document")
+            .setPositiveButton("Save") { _, _ ->
+                val newCount = editCount.text.toString()
+                val newPosition = editPosition.text.toString()
+                updateFirestoreDocument(docId, newCount, newPosition)
+            }
+            .setNegativeButton("Cancel") { dialog, _ ->
+                dialog.cancel()
+            }
+
+        val dialog = builder.create()
+        dialog.show()
+        dialog.getButton(AlertDialog.BUTTON_POSITIVE)?.setTextColor(Color.WHITE)
+        dialog.getButton(AlertDialog.BUTTON_NEGATIVE)?.setTextColor(Color.WHITE)
+    }
+
+    private fun updateFirestoreDocument(docId: String, newCount: String, newPosition: String) {
+        val db = FirebaseFirestore.getInstance()
+        val docRef = db.collection("position").document(docId)
+
+        val updates = hashMapOf<String, Any>(
+            "count" to newCount,
+            "position" to newPosition
+        )
+
+        docRef.update(updates)
+            .addOnSuccessListener {
+                Toast.makeText(context, "Document updated successfully", Toast.LENGTH_SHORT).show()
+                readFirestoreData() // Refresh the data
+            }
+            .addOnFailureListener { e ->
+                Toast.makeText(context, "Error updating document: ${e.message}", Toast.LENGTH_SHORT).show()
             }
     }
 }
